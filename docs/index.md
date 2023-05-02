@@ -1,7 +1,7 @@
 # Novelty Sampler
 
 The novelty sampler identifies experiment conditions $\vec{x}' \in X'$ that with respect to
-some pairwise distance metric applied to existing experiment conditions $\vec{x} \in X$:
+a pairwise distance metric applied to existing experiment conditions $\vec{x} \in X$:
 
 $$
 \underset{\vec{x}'}{\arg\max}~f(d(\vec{x}, \vec{x}'))
