@@ -1,8 +1,8 @@
 [project]
 # UPDATE THIS BEFORE PUBLISHING
-name = "autora-experimentalist-template"
-description = "AutoRA Experimentalist Sampler Template"
-authors = [{ name = "Max Mustermann", email = "max@mustermann.de" }]
+name = "autora-novelty-sampler"
+description = "AutoRA Novelty Experimentalist"
+authors = [{ name = "Sebastian Musslick", email = "sebastian@musslick.de" }]
 version = "0.1.0"
 
 readme = "README.md"
@@ -21,7 +21,7 @@ dev = [
 
 [project.urls]
 homepage = "http://www.empiricalresearch.ai"
-repository = "https://github.com/AutoResearch/autora-theorist-template"
+repository = "https://github.com/AutoResearch/autora-novelty-sampler"
 documentation = "https://autoresearch.github.io/autora/"
 
 [build-system]
