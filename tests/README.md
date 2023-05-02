@@ -1,30 +1,65 @@
-# Tests
+# AutoRA Novelty Sampler
 
-## Seeding
+This is an experimentalist subpackage for AutoRA: [https://github.com/AutoResearch/autora](https://github.com/AutoResearch/autora) 
 
-Some testcases involve random numbers. In order to avoid the testcases from running correctly sometimes, and incorrectly other times, we seed all the relevant random number generators for those testcases. To accomplish this, add the following pytest fixture to the test file and include it as required in the test functions:
+The novelty sampler identifies experiment conditions $\vec{x}' \in X'$ that with respect to
+a pairwise distance metric applied to existing experiment conditions $\vec{x} \in X$:
 
+$$
+\underset{\vec{x}'}{\arg\max}~f(d(\vec{x}, \vec{x}'))
+$$
+
+where $f$ is an integration function applied to all pairwise  distances.
+
+## Example
+
+For instance,
+the integration function $f(x)=\min(x)$ and distance function $d(x, x')=|x-x'|$ identifies
+condition $\vec{x}'$ with the greatest minimal Euclidean distance to all
+existing conditions in $\vec{x} \in X$.
+
+$$
+\underset{\vec{x}}{\arg\max}~\min_i(\sum_{j=1}^n(x_{i,j} - x_{i,j}')^2)
+$$
+
+To illustrate this sampling strategy, consider the following four experiment conditions that
+were already probed:
+
+
+| $x_{i,0}$ | $x_{i,1}$ | $x_{i,2}$ |
+|-----------|-----------|-----------|
+| 0         | 0         | 0         |
+| 1         | 0         | 0         |
+| 0         | 1         | 0         |
+| 0         | 0         | 1         |
+
+Fruthermore, let's consider the following three candidate conditions $X'$:
+
+| $x_{i,0}'$ | $x_{i,1}'$ | $x_{i,2}'$ |
+|------------|------------|------------|
+| 1          | 1          | 1          |
+| 2          | 2          | 2          |
+| 3          | 3          | 3          |
+
+
+If the novelty sampler is tasked to identify two novel conditions, it will select
+the last two candidate conditions $x'_{1,j}$ and $x'_{2,j}$ because they have the greatest
+minimal distance to all existing conditions $x_{i,j}$:
+
+### Example Code
 ```python
-import random
-import pytest
-import torch
+import numpy as np
+from autora.experimentalist.sampler.novelty import novelty_sampler
 
-@pytest.fixture
-def seed():
-    """
-    Ensures that the results are the same each time the tests are run.
-    """
-    random.seed(180)  # required for models which use the python `random` module
-    torch.manual_seed(180)  # required for PyTorch models
-    return
+# Specify X and X'
+X = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]])
+X_prime = np.array([[1, 1, 1], [2, 2, 2], [3, 3, 3]])
 
-
-def test_foo(seed):
-    """ Test something. """
-    
-    # No need to use `seed` in the function body – adding it as an argument is sufficient
-    
-    ... # Run tests
+# Here, we choose to identify two novel conditions
+num_samples = 2
+X_sampled = novelty_sampler(X_prime, num_samples, X)
 ```
 
-The seed value should be consistent but not tuned to produce correct results. The integer `180` is used in many tests, inspired "180 George St., Providence, RI, USA", the office address for the Center for Computation and Visualization at Brown University, whose staff supported the development of the AutoRA package. Sensible alternatives are `42`, `31415926` and `2654435769`. See [https://en.wikipedia.org/wiki/Nothing-up-my-sleeve_number](https://en.wikipedia.org/wiki/Nothing-up-my-sleeve_number) for more inspiration.
+
+
+
