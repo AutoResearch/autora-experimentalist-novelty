@@ -21,7 +21,8 @@ def test_novelty_sampler_1D():
     matrix2 = np.array([1, 2, 3])
 
     # reorder matrix1 according to its distances to matrix2
-    reordered_matrix1 = novelty_sampler(X = matrix1, n = num_samples, X_ref = matrix2)
+    reordered_matrix1 = novelty_sampler(condition_pool = matrix1, num_samples = num_samples,
+                                        reference_conditions = matrix2)
 
     assert reordered_matrix1.shape[0] == num_samples
     assert reordered_matrix1.shape[1] == 1
@@ -35,7 +36,8 @@ def test_novelty_sampler_ND():
     num_samples = 2
 
     # reorder matrix1 according to its distances to matrix2
-    reordered_matrix1 = novelty_sampler(X = matrix1, n = num_samples, X_ref = matrix2)
+    reordered_matrix1 = novelty_sampler(condition_pool = matrix1, num_samples = num_samples,
+                                        reference_conditions = matrix2)
 
     assert reordered_matrix1.shape[0] == 2
     assert reordered_matrix1.shape[1] == 3
