@@ -3,7 +3,7 @@
 name = "autora-novelty-sampler"
 description = "AutoRA Novelty Experimentalist"
 authors = [{ name = "Sebastian Musslick", email = "sebastian@musslick.de" }]
-version = "0.1.0"
+dynamic = ["version"]
 
 readme = "README.md"
 license = { text = "MIT License" }
@@ -25,5 +25,7 @@ repository = "https://github.com/AutoResearch/autora-novelty-sampler"
 documentation = "https://autoresearch.github.io/autora/"
 
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools", "setuptools_scm"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
