@@ -1,7 +1,7 @@
 # Novelty Sampler
 
-The novelty sampler identifies experiment conditions $\vec{x}' \in X'$ that with respect to
-a pairwise distance metric applied to existing experiment conditions $\vec{x} \in X$:
+The novelty sampler identifies experimental conditions $\vec{x}' \in X'$ with respect to
+a pairwise distance metric applied to existing experimental conditions $\vec{x} \in X$:
 
 $$
 \underset{\vec{x}'}{\arg\max}~f(d(\vec{x}, \vec{x}'))
@@ -20,7 +20,7 @@ $$
 \underset{\vec{x}}{\arg\max}~\min_i(\sum_{j=1}^n(x_{i,j} - x_{i,j}')^2)
 $$
 
-To illustrate this sampling strategy, consider the following four experiment conditions that
+To illustrate this sampling strategy, consider the following four experimental conditions that
 were already probed:
 
 
@@ -54,8 +54,8 @@ X = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]])
 X_prime = np.array([[1, 1, 1], [2, 2, 2], [3, 3, 3]])
 
 # Here, we choose to identify two novel conditions
-num_samples = 2
-X_sampled = novelty_sampler(X_prime, num_samples, X)
+n = 2
+X_sampled = novelty_sampler(condition_pool=X_prime, reference_conditions=X, num_samples=n)
 ```
 
 
