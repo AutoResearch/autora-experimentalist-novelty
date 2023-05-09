@@ -1,66 +1,63 @@
-# AutoRA Experimentalist Sampler Template
+# Novelty Sampler
 
-## Quickstart Guide
+The novelty sampler identifies experimental conditions $\vec{x}' \in X'$ with respect to
+a pairwise distance metric applied to existing experimental conditions $\vec{x} \in X$:
 
-Install this in an environment using your chosen package manager. In this example we are using virtualenv
+$$
+\underset{\vec{x}'}{\arg\max}~f(d(\vec{x}, \vec{x}'))
+$$
 
-Install:
-- python (3.8.2 or greater): https://www.python.org/downloads/
-- virtualenv: https://virtualenv.pypa.io/en/latest/installation.html
+where $f$ is an integration function applied to all pairwise  distances.
 
-Create a new virtual environment:
-```shell
-virtualenv venv
+## Example
+
+For instance,
+the integration function $f(x)=\min(x)$ and distance function $d(x, x')=|x-x'|$ identifies
+condition $\vec{x}'$ with the greatest minimal Euclidean distance to all
+existing conditions in $\vec{x} \in X$.
+
+$$
+\underset{\vec{x}}{\arg\max}~\min_i(\sum_{j=1}^n(x_{i,j} - x_{i,j}')^2)
+$$
+
+To illustrate this sampling strategy, consider the following four experimental conditions that
+were already probed:
+
+
+| $x_{i,0}$ | $x_{i,1}$ | $x_{i,2}$ |
+|-----------|-----------|-----------|
+| 0         | 0         | 0         |
+| 1         | 0         | 0         |
+| 0         | 1         | 0         |
+| 0         | 0         | 1         |
+
+Fruthermore, let's consider the following three candidate conditions $X'$:
+
+| $x_{i,0}'$ | $x_{i,1}'$ | $x_{i,2}'$ |
+|------------|------------|------------|
+| 1          | 1          | 1          |
+| 2          | 2          | 2          |
+| 3          | 3          | 3          |
+
+
+If the novelty sampler is tasked to identify two novel conditions, it will select
+the last two candidate conditions $x'_{1,j}$ and $x'_{2,j}$ because they have the greatest
+minimal distance to all existing conditions $x_{i,j}$:
+
+### Example Code
+```python
+import numpy as np
+from autora.experimentalist.sampler.novelty import novelty_sampler
+
+# Specify X and X'
+X = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]])
+X_prime = np.array([[1, 1, 1], [2, 2, 2], [3, 3, 3]])
+
+# Here, we choose to identify two novel conditions
+n = 2
+X_sampled = novelty_sampler(condition_pool=X_prime, reference_conditions=X, num_samples=n)
 ```
 
-Activate it:
-```shell
-source venv/bin/activate
-```
-
-Use `pip install` to install the current project (`"."`) in editable mode (`-e`) with dev-dependencies (`[dev]`):
-```shell
-pip install -e ".[dev]"
-```
-
-## Add your contribution 
-Your autora-subpackage should include (1) your code implementing the desired **experimentalist**, 
-(2) **unit tests** for this experimentalist, and (3) respective **documentation**. 
-
-### Adding the theorist
-Add your code to the `src/autora/experimentalist/sampler/your_sampler_name/`
-
-### Adding unit tests
-You may also add tests to `tests/test_exp_your_sampler_name.py`
-
-### Adding documentation
-You may document your theorist in `docs/index.md`
 
 
-## Add new dependencies 
 
-In pyproject.toml add the new dependencies under `dependencies`
-
-Install the added dependencies
-```shell
-pip install -e ".[dev]"
-```
-
-## Publishing the package
-
-Update the meta data under `project` in the pyproject.toml file to include name, description, author-name, author-email and version
-
-- Follow the guide here: https://packaging.python.org/en/latest/tutorials/packaging-projects/
-
-Build the package using:
-```shell
-python -m build
-```
-
-Publish the package to PyPI using `twine`:
-```shell
-twine upload dist/*
-```
-
-## Workflows
-...
