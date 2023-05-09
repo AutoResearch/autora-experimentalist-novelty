@@ -1,7 +1,7 @@
 """
 Novelty Sampler
 """
-from typing import Iterable, Literal
+from typing import Iterable, Literal, Optional
 
 import numpy as np
 from sklearn.metrics import DistanceMetric
@@ -33,8 +33,8 @@ AllowedMetrics = Literal[
 
 def novelty_sampler(
     condition_pool: np.ndarray,
-    num_samples: int,
     reference_conditions: np.ndarray,
+    num_samples: Optional[int] = None,
     metric: AllowedMetrics = "euclidean",
     integration: str = "min",
 ) -> np.ndarray:
@@ -42,11 +42,12 @@ def novelty_sampler(
     This dissimilarity samples re-arranges the pool of experimental conditions according to their
     dissimilarity with respect to a reference pool. The default dissimilarity is calculated
     as the average of the pairwise distances between the conditions in the pool and the reference conditions.
+    If no number of samples are specified, all samples will be ordered and returned from the pool.
 
     Args:
-        condition_pool: pool of IV conditions to evaluate dissimilarity
-        num_samples: number of samples to select
-        reference_conditions: reference pool of IV conditions
+        condition_pool: pool of experimental conditions to evaluate dissimilarity
+        reference_conditions: reference pool of experimental conditions
+        num_samples: number of samples to select from the pool of experimental conditions (the default is to select all)
         metric (str): dissimilarity measure. Options: 'euclidean', 'manhattan', 'chebyshev',
             'minkowski', 'wminkowski', 'seuclidean', 'mahalanobis', 'haversine',
             'hamming', 'canberra', 'braycurtis', 'matching', 'jaccard', 'dice',
@@ -57,15 +58,15 @@ def novelty_sampler(
         Sampled pool of conditions
     """
 
-    new_conditions, distance_scores = compute_dissimilarity(condition_pool, num_samples, reference_conditions, metric, integration)
+    new_conditions, distance_scores = compute_dissimilarity(condition_pool, reference_conditions, num_samples, metric, integration)
 
     return new_conditions
 
 
 def compute_dissimilarity(
     condition_pool: np.ndarray,
-    num_samples: int,
     reference_conditions: np.ndarray,
+    num_samples: Optional[int] = None,
     metric: AllowedMetrics = "euclidean",
     integration: str = "sum",
 ) -> np.ndarray:
@@ -73,11 +74,12 @@ def compute_dissimilarity(
     This dissimilarity samples re-arranges the pool of experimental conditions according to their
     dissimilarity with respect to a reference pool. The default dissimilarity is calculated
     as the average of the pairwise distances between the conditions in the pool and the reference conditions.
+    If no number of samples are specified, all samples will be ordered and returned from the pool.
 
     Args:
-        condition_pool: pool of IV conditions to evaluate dissimilarity
-        num_samples: number of samples to select
-        reference_conditions: reference pool of IV conditions
+        condition_pool: pool of experimental conditions to evaluate dissimilarity
+        reference_conditions: reference pool of experimental conditions
+        num_samples: number of samples to select from the pool of experimental conditions (the default is to select all)
         metric (str): dissimilarity measure. Options: 'euclidean', 'manhattan', 'chebyshev',
             'minkowski', 'wminkowski', 'seuclidean', 'mahalanobis', 'haversine',
             'hamming', 'canberra', 'braycurtis', 'matching', 'jaccard', 'dice',
@@ -110,6 +112,9 @@ def compute_dissimilarity(
             f"X and X_ref must have the same number of columns.\n"
             f"X has {X.shape[1]} columns, while X_ref has {X_ref.shape[1]} columns."
         )
+
+    if num_samples is None:
+        num_samples = X.shape[0]
 
     if X.shape[0] < num_samples:
         raise ValueError(
