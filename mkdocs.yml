@@ -5,5 +5,7 @@ site_name: AutoRA Novelty Sampler
 repo_url: 'https://github.com/autoresearch/autora-novelty-sampler'
 
 nav:
-- 'index.md'
-- 'example.ipynb'
+- Home: 'index.md'
+- Quickstart: 'quickstart.md'
+- Examples:
+  - Basic Usage: 'basic-usage.ipynb'
