@@ -1,7 +1,7 @@
 [project]
 # UPDATE THIS BEFORE PUBLISHING
-name = "autora-novelty-sampler"
-description = "AutoRA Novelty Experimentalist"
+name = "autora-experimentalist-novelty-sampler"
+description = "Novelty Experimentalist"
 authors = [{ name = "Sebastian Musslick", email = "sebastian@musslick.de" }]
 dynamic = ["version"]
 
@@ -21,7 +21,7 @@ dev = [
 
 [project.urls]
 homepage = "http://www.empiricalresearch.ai"
-repository = "https://github.com/AutoResearch/autora-novelty-sampler"
+repository = "https://github.com/AutoResearch/autora-experimentalist-novelty-sampler"
 documentation = "https://autoresearch.github.io/autora/"
 
 [build-system]
