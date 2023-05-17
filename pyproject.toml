@@ -1,7 +1,7 @@
 [project]
 # UPDATE THIS BEFORE PUBLISHING
 name = "autora-experimentalist-novelty-sampler"
-description = "Novelty Experimentalist"
+description = "AutoRA Novelty Experimentalist"
 authors = [{ name = "Sebastian Musslick", email = "sebastian@musslick.de" }]
 dynamic = ["version"]
 
