@@ -2,7 +2,7 @@
 INHERIT: mkdocs/base.yml  # use the shared AutoRA configuration by default
 
 site_name: AutoRA Novelty Sampler
-repo_url: 'https://github.com/autoresearch/autora-experimentalist-novelty-sampler'
+repo_url: 'https://github.com/autoresearch/autora-experimentalist-sampler-novelty'
 
 nav:
 - Home: 'index.md'
