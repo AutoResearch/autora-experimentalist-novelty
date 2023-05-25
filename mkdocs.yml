@@ -8,4 +8,4 @@ nav:
 - Home: 'index.md'
 - Quickstart: 'quickstart.md'
 - Examples:
-  - Basic Usage: 'basic-usage.ipynb'
+  - Basic Usage: 'Basic Usage.ipynb'
