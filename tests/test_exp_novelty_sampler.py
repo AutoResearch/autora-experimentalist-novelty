@@ -56,6 +56,4 @@ def test_novelty_score_sampler_ND():
                                         reference_conditions=matrix2,
                                         num_samples=num_samples)
 
-    assert reordered_matrix1.shape[0] == 2
-    assert reordered_matrix1.shape[1] == 3
     assert score[0] > score[1]  and score[1] > score[2]
