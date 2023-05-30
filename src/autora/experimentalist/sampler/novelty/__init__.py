@@ -39,7 +39,7 @@ def novelty_sampler(
     integration: str = "min",
 ) -> np.ndarray:
     """
-    This dissimilarity samples re-arranges the pool of experimental conditions according to their
+    This novelty sampler re-arranges the pool of experimental conditions according to their
     dissimilarity with respect to a reference pool. The default dissimilarity is calculated
     as the average of the pairwise distances between the conditions in the pool and the reference conditions.
     If no number of samples are specified, all samples will be ordered and returned from the pool.
@@ -60,7 +60,7 @@ def novelty_sampler(
 
     new_conditions, distance_scores = novelty_score_sampler(condition_pool, reference_conditions, num_samples, metric, integration)
 
-    return new_conditions
+    return new_conditions, distance_scores
 
 
 def novelty_score_sampler(
@@ -92,38 +92,35 @@ def novelty_score_sampler(
         Sampled pool of conditions and dissimilarity scores
     """
 
-    X = condition_pool
-    X_ref = reference_conditions
+    if isinstance(condition_pool, Iterable):
+        condition_pool = np.array(list(condition_pool))
 
-    if isinstance(X, Iterable):
-        X = np.array(list(X))
+    if isinstance(reference_conditions, Iterable):
+        reference_conditions = np.array(list(reference_conditions))
 
-    if isinstance(X_ref, Iterable):
-        X_ref = np.array(list(X_ref))
+    if condition_pool.ndim == 1:
+        condition_pool = condition_pool.reshape(-1, 1)
 
-    if X.ndim == 1:
-        X = X.reshape(-1, 1)
+    if reference_conditions.ndim == 1:
+        reference_conditions = reference_conditions.reshape(-1, 1)
 
-    if X_ref.ndim == 1:
-        X_ref = X_ref.reshape(-1, 1)
-
-    if X.shape[1] != X_ref.shape[1]:
+    if condition_pool.shape[1] != reference_conditions.shape[1]:
         raise ValueError(
-            f"X and X_ref must have the same number of columns.\n"
-            f"X has {X.shape[1]} columns, while X_ref has {X_ref.shape[1]} columns."
+            f"condition_pool and reference_conditions must have the same number of columns.\n"
+            f"condition_pool has {condition_pool.shape[1]} columns, while reference_conditions has {reference_conditions.shape[1]} columns."
         )
 
     if num_samples is None:
-        num_samples = X.shape[0]
+        num_samples = condition_pool.shape[0]
 
-    if X.shape[0] < num_samples:
+    if condition_pool.shape[0] < num_samples:
         raise ValueError(
-            f"X must have at least {num_samples} rows matching the number of requested samples."
+            f"condition_pool must have at least {num_samples} rows matching the number of requested samples."
         )
 
     dist = DistanceMetric.get_metric(metric)
 
-    distances = dist.pairwise(X_ref, X)
+    distances = dist.pairwise(reference_conditions, condition_pool)
 
     if integration == "sum":
         integrated_distance = np.sum(distances, axis=0)
@@ -143,7 +140,7 @@ def novelty_score_sampler(
     score = scaler.fit_transform(integrated_distance.reshape(-1, 1)).flatten()
 
     # order rows in Y from highest to lowest
-    sorted_X = X[np.argsort(integrated_distance)[::-1]]
+    sorted_condition_pool = condition_pool[np.argsort(integrated_distance)[::-1]]
     sorted_score = score[np.argsort(score)[::-1]]
 
-    return sorted_X[:num_samples], sorted_score[:num_samples]
+    return sorted_condition_pool[:num_samples], sorted_score[:num_samples]
