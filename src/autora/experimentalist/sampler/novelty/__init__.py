@@ -7,6 +7,8 @@ import numpy as np
 from sklearn.metrics import DistanceMetric
 from sklearn.preprocessing import StandardScaler
 
+from autora.utils.deprecation import deprecated_alias
+
 AllowedMetrics = Literal[
     "euclidean",
     "manhattan",
@@ -63,7 +65,7 @@ def novelty_sampler(
     return new_conditions
 
 
-def novelty_score_sampler(
+def novelty_score_sample(
     condition_pool: np.ndarray,
     reference_conditions: np.ndarray,
     num_samples: Optional[int] = None,
@@ -144,3 +146,5 @@ def novelty_score_sampler(
     sorted_score = score[np.argsort(score)[::-1]]
 
     return sorted_condition_pool[:num_samples], sorted_score[:num_samples]
+
+novelty_score_sampler = deprecated_alias(novelty_score_sample, "novelty_score_sampler")
