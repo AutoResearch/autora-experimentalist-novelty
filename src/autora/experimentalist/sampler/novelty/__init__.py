@@ -33,7 +33,7 @@ AllowedMetrics = Literal[
 ]
 
 
-def novelty_sampler(
+def novelty_sample(
     condition_pool: np.ndarray,
     reference_conditions: np.ndarray,
     num_samples: Optional[int] = None,
@@ -60,7 +60,7 @@ def novelty_sampler(
         Sampled pool of conditions
     """
 
-    new_conditions, distance_scores = novelty_score_sampler(condition_pool, reference_conditions, num_samples, metric, integration)
+    new_conditions, distance_scores = novelty_score_sample(condition_pool, reference_conditions, num_samples, metric, integration)
 
     return new_conditions
 
@@ -147,4 +147,5 @@ def novelty_score_sample(
 
     return sorted_condition_pool[:num_samples], sorted_score[:num_samples]
 
+novelty_sampler = deprecated_alias(novelty_sample, "novelty_sampler")
 novelty_score_sampler = deprecated_alias(novelty_score_sample, "novelty_score_sampler")
