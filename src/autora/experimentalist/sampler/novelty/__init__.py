@@ -1,9 +1,10 @@
 """
 Novelty Sampler
 """
-from typing import Iterable, Literal, Optional
+from typing import Iterable, Literal, Optional, Union
 
 import numpy as np
+import pandas as pd
 from sklearn.metrics import DistanceMetric
 from sklearn.preprocessing import StandardScaler
 
@@ -60,18 +61,18 @@ def novelty_sample(
         Sampled pool of conditions
     """
 
-    new_conditions, distance_scores = novelty_score_sample(condition_pool, reference_conditions, num_samples, metric, integration)
+    new_conditions = novelty_score_sample(condition_pool, reference_conditions, num_samples, metric, integration)
 
     return new_conditions
 
 
 def novelty_score_sample(
-    condition_pool: np.ndarray,
+    condition_pool: Union[pd.DataFrame, np.ndarray],
     reference_conditions: np.ndarray,
     num_samples: Optional[int] = None,
     metric: AllowedMetrics = "euclidean",
     integration: str = "sum",
-) -> np.ndarray:
+) -> pd.DataFrame:
     """
     This dissimilarity samples re-arranges the pool of experimental conditions according to their
     dissimilarity with respect to a reference pool. The default dissimilarity is calculated
@@ -93,35 +94,9 @@ def novelty_score_sample(
     Returns:
         Sampled pool of conditions and dissimilarity scores
     """
-
-    if isinstance(condition_pool, Iterable):
-        condition_pool = np.array(list(condition_pool))
-
-    if isinstance(reference_conditions, Iterable):
-        reference_conditions = np.array(list(reference_conditions))
-
-    if condition_pool.ndim == 1:
-        condition_pool = condition_pool.reshape(-1, 1)
-
-    if reference_conditions.ndim == 1:
-        reference_conditions = reference_conditions.reshape(-1, 1)
-
-    if condition_pool.shape[1] != reference_conditions.shape[1]:
-        raise ValueError(
-            f"condition_pool and reference_conditions must have the same number of columns.\n"
-            f"condition_pool has {condition_pool.shape[1]} columns, while reference_conditions has {reference_conditions.shape[1]} columns."
-        )
-
-    if num_samples is None:
-        num_samples = condition_pool.shape[0]
-
-    if condition_pool.shape[0] < num_samples:
-        raise ValueError(
-            f"condition_pool must have at least {num_samples} rows matching the number of requested samples."
-        )
+    condition_pool = pd.DataFrame(condition_pool)
 
     dist = DistanceMetric.get_metric(metric)
-
     distances = dist.pairwise(reference_conditions, condition_pool)
 
     if integration == "sum":
@@ -142,10 +117,13 @@ def novelty_score_sample(
     score = scaler.fit_transform(integrated_distance.reshape(-1, 1)).flatten()
 
     # order rows in Y from highest to lowest
-    sorted_condition_pool = condition_pool[np.argsort(integrated_distance)[::-1]]
-    sorted_score = score[np.argsort(score)[::-1]]
+    condition_pool["score"] = score
+    condition_pool = condition_pool.sort_values(by="score", ascending=False)
 
-    return sorted_condition_pool[:num_samples], sorted_score[:num_samples]
+    if num_samples is not None:
+        return condition_pool[:num_samples]
+    else:
+        return condition_pool
 
 novelty_sampler = deprecated_alias(novelty_sample, "novelty_sampler")
 novelty_score_sampler = deprecated_alias(novelty_score_sample, "novelty_score_sampler")

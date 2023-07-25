@@ -1,3 +1,4 @@
+import pandas as pd
 from autora.experimentalist.sampler.novelty import novelty_sample, novelty_score_sample
 import numpy as np
 
@@ -10,7 +11,17 @@ def test_output_dimensions():
     condition_pool_new = novelty_sample(condition_pool, reference_conditions, n)
 
     # Check that the sampler returns n experiment conditions
-    assert condition_pool_new.shape == (n, condition_pool.shape[1])
+    assert condition_pool_new.shape[0] == n
+
+def test_output_dimensions_df():
+    condition_pool = pd.DataFrame([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]])
+    reference_conditions = pd.DataFrame([[0, 0, 0, 0], [1, 1, 1, 1]])
+    n = 2
+    condition_pool_new = novelty_score_sample(condition_pool, reference_conditions, n)
+
+    # Check that the sampler returns n experiment conditions
+    assert condition_pool_new.shape[0] == n
+
 
 def test_novelty_sample_1D():
 
