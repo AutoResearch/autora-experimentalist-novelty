@@ -34,8 +34,8 @@ AllowedMetrics = Literal[
 ]
 
 
-def novelty_sample(
-    condition_pool: np.ndarray,
+def sample(
+    conditions: Union[pd.DataFrame, np.ndarray],
     reference_conditions: np.ndarray,
     num_samples: Optional[int] = None,
     metric: AllowedMetrics = "euclidean",
@@ -61,14 +61,15 @@ def novelty_sample(
         Sampled pool of conditions
     """
 
-    new_conditions = novelty_score_sample(condition_pool, reference_conditions, num_samples, metric, integration)
+    new_conditions = novelty_score_sample(conditions, reference_conditions, num_samples, metric, integration)
+    new_conditions.drop("score", axis=1, inplace=True)
 
     return new_conditions
 
 
-def novelty_score_sample(
-    condition_pool: Union[pd.DataFrame, np.ndarray],
-    reference_conditions: np.ndarray,
+def score_sample(
+    conditions: Union[pd.DataFrame, np.ndarray],
+    reference_conditions: Union[pd.DataFrame, np.ndarray],
     num_samples: Optional[int] = None,
     metric: AllowedMetrics = "euclidean",
     integration: str = "sum",
@@ -94,10 +95,11 @@ def novelty_score_sample(
     Returns:
         Sampled pool of conditions and dissimilarity scores
     """
-    condition_pool = pd.DataFrame(condition_pool)
+    conditions = pd.DataFrame(conditions)
+    reference_conditions = pd.DataFrame(reference_conditions)
 
     dist = DistanceMetric.get_metric(metric)
-    distances = dist.pairwise(reference_conditions, condition_pool)
+    distances = dist.pairwise(reference_conditions, conditions)
 
     if integration == "sum":
         integrated_distance = np.sum(distances, axis=0)
@@ -117,13 +119,17 @@ def novelty_score_sample(
     score = scaler.fit_transform(integrated_distance.reshape(-1, 1)).flatten()
 
     # order rows in Y from highest to lowest
-    condition_pool["score"] = score
-    condition_pool = condition_pool.sort_values(by="score", ascending=False)
+    conditions["score"] = score
+    conditions = conditions.sort_values(by="score", ascending=False)
 
     if num_samples is not None:
-        return condition_pool[:num_samples]
+        return conditions[:num_samples]
     else:
-        return condition_pool
+        return conditions
 
+novelty_sample = sample
+novelty_sample.__doc__ = """Alias for sample"""
+novelty_score_sample = score_sample
+novelty_score_sample.__doc__ = """Alias for score_sample"""
 novelty_sampler = deprecated_alias(novelty_sample, "novelty_sampler")
 novelty_score_sampler = deprecated_alias(novelty_score_sample, "novelty_score_sampler")
