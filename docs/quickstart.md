@@ -7,11 +7,11 @@ You will need:
 *Novelty Sampler* is a part of the `autora` package:
 
 ```shell
-pip install -U autora["experimentalist-sampler-novelty"]
+pip install -U autora["experimentalist-novelty"]
 ```
 
 
 Check your installation by running:
 ```shell
-python -c "from autora.experimentalist.sampler.novelty import novelty_sample"
+python -c "from autora.experimentalist.novelty import novelty_sample"
 ```

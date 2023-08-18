@@ -47,7 +47,7 @@ minimal distance to all existing conditions $x_{i,j}$:
 ### Example Code
 ```python
 import numpy as np
-from autora.experimentalist.sampler.novelty import novelty_sample, novelty_score_sample
+from autora.experimentalist.novelty import novelty_sample, novelty_score_sample
 
 # Specify X and X'
 X = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]])
@@ -55,10 +55,10 @@ X_prime = np.array([[1, 1, 1], [2, 2, 2], [3, 3, 3]])
 
 # Here, we choose to identify two novel conditions
 n = 2
-X_sampled = novelty_sample(condition_pool=X_prime, reference_conditions=X, num_samples=n)
+X_sampled = novelty_sample(conditions=X_prime, reference_conditions=X, num_samples=n)
 
 # We may also obtain samples along with their z-scored novelty scores  
-(X_sampled, scores) = novelty_score_sample(condition_pool=X_prime, reference_conditions=X, num_samples=n)
+(X_sampled, scores) = novelty_score_sample(conditions=X_prime, reference_conditions=X, num_samples=n)
 ```
 
 
