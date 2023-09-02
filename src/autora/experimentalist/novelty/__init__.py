@@ -1,5 +1,5 @@
 """
-Novelty Sampler
+Novelty Experimentalist
 """
 from typing import Iterable, Literal, Optional, Union
 
@@ -42,7 +42,7 @@ def sample(
     integration: str = "min",
 ) -> np.ndarray:
     """
-    This novelty sampler re-arranges the pool of experimental conditions according to their
+    This novelty experimentalist re-arranges the pool of experimental conditions according to their
     dissimilarity with respect to a reference pool. The default dissimilarity is calculated
     as the average of the pairwise distances between the conditions in the pool and the reference conditions.
     If no number of samples are specified, all samples will be ordered and returned from the pool.

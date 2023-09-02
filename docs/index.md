@@ -1,6 +1,6 @@
-# Novelty Sampler
+# Novelty Experimentalist
 
-The novelty sampler identifies experimental conditions $\vec{x}' \in X'$ with respect to
+The novelty experimentalist identifies experimental conditions $\vec{x}' \in X'$ with respect to
 a pairwise distance metric applied to existing experimental conditions $\vec{x} \in X$:
 
 $$
@@ -40,7 +40,7 @@ Fruthermore, let's consider the following three candidate conditions $X'$:
 | 3          | 3          | 3          |
 
 
-If the novelty sampler is tasked to identify two novel conditions, it will select
+If the novelty experimentalist is tasked to identify two novel conditions, it will select
 the last two candidate conditions $x'_{1,j}$ and $x'_{2,j}$ because they have the greatest
 minimal distance to all existing conditions $x_{i,j}$:
 
