@@ -36,7 +36,7 @@ AllowedMetrics = Literal[
 
 def sample(
     conditions: Union[pd.DataFrame, np.ndarray],
-    reference_conditions: np.ndarray,
+    reference_conditions: Union[pd.DataFrame, np.ndarray],
     num_samples: Optional[int] = None,
     metric: AllowedMetrics = "euclidean",
     integration: str = "min",
