@@ -48,7 +48,7 @@ def sample(
     If no number of samples are specified, all samples will be ordered and returned from the pool.
 
     Args:
-        condition_pool: pool of experimental conditions to evaluate dissimilarity
+        conditions: pool of experimental conditions to evaluate dissimilarity
         reference_conditions: reference pool of experimental conditions
         num_samples: number of samples to select from the pool of experimental conditions (the default is to select all)
         metric (str): dissimilarity measure. Options: 'euclidean', 'manhattan', 'chebyshev',
