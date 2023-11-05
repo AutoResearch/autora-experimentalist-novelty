@@ -1,7 +1,7 @@
 """
 Novelty Experimentalist
 """
-from typing import Iterable, Literal, Optional, Union
+from typing import Literal, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -44,13 +44,15 @@ def sample(
     """
     This novelty experimentalist re-arranges the pool of experimental conditions according to their
     dissimilarity with respect to a reference pool. The default dissimilarity is calculated
-    as the average of the pairwise distances between the conditions in the pool and the reference conditions.
+    as the average of the pairwise distances between the conditions in the pool and the reference
+    conditions.
     If no number of samples are specified, all samples will be ordered and returned from the pool.
 
     Args:
         conditions: pool of experimental conditions to evaluate dissimilarity
         reference_conditions: reference pool of experimental conditions
-        num_samples: number of samples to select from the pool of experimental conditions (the default is to select all)
+        num_samples: number of samples to select from the pool of experimental conditions
+        (the default is to select all)
         metric (str): dissimilarity measure. Options: 'euclidean', 'manhattan', 'chebyshev',
             'minkowski', 'wminkowski', 'seuclidean', 'mahalanobis', 'haversine',
             'hamming', 'canberra', 'braycurtis', 'matching', 'jaccard', 'dice',
@@ -61,7 +63,9 @@ def sample(
         Sampled pool of conditions
     """
 
-    new_conditions = novelty_score_sample(conditions, reference_conditions, num_samples, metric, integration)
+    new_conditions = novelty_score_sample(
+        conditions, reference_conditions, num_samples, metric, integration
+    )
     new_conditions.drop("score", axis=1, inplace=True)
 
     return new_conditions
@@ -77,13 +81,15 @@ def score_sample(
     """
     This dissimilarity samples re-arranges the pool of experimental conditions according to their
     dissimilarity with respect to a reference pool. The default dissimilarity is calculated
-    as the average of the pairwise distances between the conditions in the pool and the reference conditions.
+    as the average of the pairwise distances between the conditions in the pool and the reference
+    conditions.
     If no number of samples are specified, all samples will be ordered and returned from the pool.
 
     Args:
-        condition_pool: pool of experimental conditions to evaluate dissimilarity
+        conditions: pool of experimental conditions to evaluate dissimilarity
         reference_conditions: reference pool of experimental conditions
-        num_samples: number of samples to select from the pool of experimental conditions (the default is to select all)
+        num_samples: number of samples to select from the pool of experimental conditions
+        (the default is to select all)
         metric (str): dissimilarity measure. Options: 'euclidean', 'manhattan', 'chebyshev',
             'minkowski', 'wminkowski', 'seuclidean', 'mahalanobis', 'haversine',
             'hamming', 'canberra', 'braycurtis', 'matching', 'jaccard', 'dice',
@@ -126,6 +132,7 @@ def score_sample(
         return conditions[:num_samples]
     else:
         return conditions
+
 
 novelty_sample = sample
 novelty_sample.__doc__ = """Alias for sample"""
