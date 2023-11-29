@@ -40,7 +40,7 @@ def sample(
     num_samples: Optional[int] = None,
     metric: AllowedMetrics = "euclidean",
     integration: str = "min",
-) -> np.ndarray:
+):
     """
     This novelty experimentalist re-arranges the pool of experimental conditions according to their
     dissimilarity with respect to a reference pool. The default dissimilarity is calculated
@@ -63,10 +63,15 @@ def sample(
         Sampled pool of conditions
     """
 
+    condition_pool_copy = conditions.copy()
+
     new_conditions = novelty_score_sample(
         conditions, reference_conditions, num_samples, metric, integration
     )
     new_conditions.drop("score", axis=1, inplace=True)
+
+    if isinstance(condition_pool_copy, pd.DataFrame):
+        new_conditions = pd.DataFrame(new_conditions, columns=condition_pool_copy.columns)
 
     return new_conditions
 
