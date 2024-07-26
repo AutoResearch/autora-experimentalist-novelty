@@ -71,7 +71,9 @@ def sample(
     new_conditions.drop("score", axis=1, inplace=True)
 
     if isinstance(condition_pool_copy, pd.DataFrame):
-        new_conditions = pd.DataFrame(new_conditions, columns=condition_pool_copy.columns)
+        new_conditions = pd.DataFrame(
+            new_conditions, columns=condition_pool_copy.columns
+        )
 
     return new_conditions
 
